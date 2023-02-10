@@ -1,0 +1,15 @@
+## grafana ##
+grafana_version: "6.7.4"
+grafana_admin_password: "AdminUser1"
+grafana_admin_user: "TestP@zzw0rd2022!"
+grafana_server: "https://localhost:3000"
+grafana_user_password: "TestP@zzw0rd_2-2022!"
+new_grafana_users: 
+ - '{"name": "Test User", "email": "testuser@test.local", "login": "testuser@test.local", "password": "Gr@fanatest!"}'
+ 
+## influxdb ##
+influxdb_username: "AdminUser1"
+influxdb_password: "AdminP@zzw0rd2022!"
+influxdb_database: "influxdb"
+
+ 

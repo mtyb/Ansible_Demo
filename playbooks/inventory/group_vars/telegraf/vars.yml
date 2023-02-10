@@ -1,0 +1,5 @@
+telegraf_version: "1.13.4"
+
+influxdb_username: "AdminUser1"
+influxdb_password: "AdminP@zzw0rd2022!"
+influxdb_database: "influxdb" 

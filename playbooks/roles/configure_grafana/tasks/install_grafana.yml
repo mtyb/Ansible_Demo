@@ -1,0 +1,62 @@
+  - name: Add Grafana repository
+    template:
+      src: grafana_repo.j2
+      dest: /etc/yum.repos.d/grafana.repo
+
+  - name: Install Grafana v. {{ grafana_version }}
+    yum:
+      name: grafana-{{ grafana_version }}
+      state: present
+
+  - name: Enable Grafana to use port 443
+    capabilities:
+      path: /usr/sbin/grafana-server
+      capability: cap_net_bind_service+ep
+      state: present
+
+  - name: Generate Self-Signed certificate
+    command: openssl req -newkey rsa:4096 \
+            -x509 \
+            -sha256 \
+            -days 365 \
+            -nodes \
+            -out /etc/grafana/example.crt \
+            -keyout /etc/grafana/example.key \
+            -subj "/C=PL/ST=Warsaw/L=Warsaw/O=Test.Local/OU=IT Department/CN=www.test.local"
+    no_log: true
+
+  - name: Copy Grafana config file
+    template: 
+      src: grafana_conf.j2
+      dest: /etc/grafana/grafana.ini
+
+  - name: Copy Grafana dashboards provisioning file
+    template: 
+      src: grafana_provisioning.j2
+      dest: /etc/grafana/provisioning/dashboards/all.yaml
+      group: grafana
+
+  - name: Import Grafana dashboards
+    copy:
+      src: dashboards/
+      dest: /var/lib/grafana/dashboards
+
+  - name: Restart Grafana service
+    systemd: 
+      name: grafana-server
+      state: restarted
+
+  - name: Create influxdb datasource
+    grafana_datasource:
+      name: "InfluxDB"
+      grafana_url: "{{ grafana_server }}"
+      grafana_user: "{{ grafana_admin_user }}"
+      grafana_password: "{{ grafana_admin_password }}"
+      org_id: "1"
+      ds_type: "influxdb"
+      ds_url: "http://{{ influxdb_server_ip }}:8086"
+      user: "{{ influxdb_username }}"
+      password: "{{ influxdb_password }}"
+      database: "{{ influxdb_database }}"
+      time_interval: ">10s"
+      validate_certs: no 

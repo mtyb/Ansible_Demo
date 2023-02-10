@@ -1,0 +1,44 @@
+- name: Enabled Real Time Monitoring
+  win_dsc:
+    resource_name: 'RegistryPolicyFile'
+    Key: 'Software\Policies\Microsoft\Windows Defender\Real-Time Protection'
+    TargetType: ComputerConfiguration
+    ValueType: Dword
+    ValueName: DisableRealtimeMonitoring
+    ValueData: 0
+
+- name: Set scan day to Tuesday
+  win_dsc:
+    resource_name: 'RegistryPolicyFile'
+    Key: 'Software\Policies\Microsoft\Windows Defender\Scan'
+    TargetType: ComputerConfiguration
+    ValueType: Dword
+    ValueName: ScheduleTimeScheduleDay
+    ValueData: 3
+
+- name: Set scan time to 6PM
+  win_dsc:
+    resource_name: 'RegistryPolicyFile'
+    Key: 'Software\Policies\Microsoft\Windows Defender\Scan'
+    TargetType: ComputerConfiguration
+    ValueType: Dword
+    ValueName: ScheduleTime
+    ValueData: 1050
+
+- name: Set scan type to Full scan
+  win_dsc:
+    resource_name: 'RegistryPolicyFile'
+    Key: 'Software\Policies\Microsoft\Windows Defender\Scan'
+    TargetType: ComputerConfiguration
+    ValueType: Dword
+    ValueName: ScanParameters
+    ValueData: 2
+
+- name: Set CPU usage to 20%
+  win_dsc:
+    resource_name: 'RegistryPolicyFile'
+    Key: 'Software\Policies\Microsoft\Windows Defender\Scan'
+    TargetType: ComputerConfiguration
+    ValueType: Dword
+    ValueName: AvgCPULoadFactor
+    ValueData: 20

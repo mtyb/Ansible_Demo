@@ -1,0 +1,5 @@
+  - name: Install Notepad ++
+    include_tasks: install_notepad.yaml
+
+  - name: Install 7-Zip
+    include_tasks: install_7zip.yaml

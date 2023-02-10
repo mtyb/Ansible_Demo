@@ -1,0 +1,11 @@
+---
+installations_dir: "C:/Installs"
+
+dot_net_version: "3.1.24"
+dot_net_install_url: "https://download.visualstudio.microsoft.com/download/pr/ef6e674c-f33e-41db-90a1-af92a815d2e1/509285f9212cbbf6fde3d35b213bc80d/dotnet-runtime-3.1.24-win-x86.exe"
+
+zip_version: "2107"
+zip_install_url: "https://www.7-zip.org/a/7z{{ zip_version }}-x64.exe"
+
+notepad_version: "8.4"
+notepad_install_url: "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.4/npp.{{ notepad_version }}.Installer.x64.exe"

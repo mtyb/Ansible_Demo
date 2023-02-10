@@ -1,0 +1,56 @@
+$networkSpace='10.11.12.' ### address space VirtualBox private network
+
+Vagrant.configure("2") do |config|
+  config.vm.define "ansible" do |ansible|
+    ansible.vm.box = "almalinux/8"
+    ansible.vm.box_version = "8.6.20220513"
+    ansible.vm.network "private_network", :ip => $networkSpace+'230'
+    ansible.vm.hostname = "ansible"
+    ansible.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "2048"]
+        vb.customize ["modifyvm", :id, "--cpus", "1"]
+        vb.name = "ansible"
+        ansible.vm.provision "shell", inline: <<-SHELL
+            ### install Epel Release repo
+            sudo dnf install epel-release -y
+            ### install Ansible
+            sudo dnf install ansible -y
+            ### install OpenSSL
+            sudo dnf install openssl -y
+            ### install WinRM module for Python and Jmespath module
+            sudo dnf install python39-winrm.noarch python39-jmespath -y
+            ### install Ansible Windows Community collection
+            sudo ansible-galaxy collection install community.windows:1.9.0 -p /usr/lib/python3.9/site-packages/ansible_collections 
+      SHELL
+    end
+    ansible.vm.provision "file", source: "./playbooks", destination: "/home/vagrant/"
+end
+
+(1..1).each do |i|
+config.vm.define "linux#{i}" do |linux|
+  linux.vm.box = "almalinux/8"
+  linux.vm.box_version = "8.6.20220513"
+  linux.vm.hostname = "grafana-#{i}"
+  linux.vm.network "private_network", :ip => $networkSpace+'25'+"#{i}"
+  linux.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+      vb.customize ["modifyvm", :id, "--cpus", "1"]
+      vb.name = "grafana-#{i}"
+  end
+end
+end
+
+(1..2).each do |i|
+  config.vm.define "windows#{i}" do |windows|
+    windows.vm.box = "gusztavvargadr/windows-server"
+    windows.vm.box_version = "1809.0.2211"
+    windows.vm.hostname = "WS2019-#{i}"
+    windows.vm.network "private_network", :ip => $networkSpace+'24'+"#{i}"
+    windows.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--memory", "4096"]
+        vb.customize ["modifyvm", :id, "--cpus", "2"]
+        vb.name = "WS2019-#{i}"
+    end
+  end
+end
+end

@@ -1,0 +1,16 @@
+ - hosts: influxdb
+   become: yes
+   roles: 
+    - configure_influxdb
+  
+ - hosts: grafana
+   become: yes
+   roles: 
+    - configure_grafana
+
+ - hosts: telegraf
+   roles: 
+    - configure_telegraf
+
+
+       

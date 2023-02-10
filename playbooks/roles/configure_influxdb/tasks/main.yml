@@ -1,0 +1,50 @@
+  - name: Add InfluxDB repository
+    template:
+      src: influxdb_repo.j2
+      dest: /etc/yum.repos.d/influxdb.repo
+
+  - name: Install InfluxDB v. {{ influxdb_version }}
+    yum:
+      name: influxdb-{{ influxdb_version }}
+      state: present
+
+  - name: Start InfluxDB service
+    service: 
+      name: influxdb
+      state: started
+
+  - name: Wait for InfluxDB to start listening on port 8086
+    wait_for: 
+      host: localhost
+      port: 8086
+      delay: 30
+      state: started
+      timeout: 300
+
+  - name: Create InfluxDB database
+    command: "influx -execute \"CREATE DATABASE {{ influxdb_database }}\""
+    no_log: true
+
+  - name: Create InfluxDB user
+    command: "influx -execute \"CREATE USER {{ influxdb_username }} WITH PASSWORD '{{ influxdb_password }}' WITH ALL PRIVILEGES\""
+    no_log: true
+
+  - name: Enable InfluxDB authentication
+    lineinfile:
+      path: /etc/influxdb/influxdb.conf
+      regex: '^# auth-enabled = '
+      line: auth-enabled = true
+
+  - name: Start InfluxDB service
+    service: 
+      name: influxdb
+      state: restarted
+ 
+  - name: Delegate Influx IP address to Grafana VMs
+    set_fact:
+      influxdb_server_ip: "{{ ansible_enp0s8.ipv4.address }}"
+    delegate_to: '{{ item }}'
+    delegate_facts: true
+    with_items: 
+      - '{{ groups["grafana"] }}'
+      - '{{ groups["telegraf"] }}'

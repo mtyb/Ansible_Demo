@@ -1,0 +1,8 @@
+- name: Set exclusion for {{ item }}
+  win_dsc:
+    resource_name: 'RegistryPolicyFile'
+    Key: 'Software\Policies\Microsoft\Windows Defender\Exclusions\Processes'
+    TargetType: ComputerConfiguration
+    ValueType: Dword
+    ValueName: "{{ item }}"
+    ValueData: 0

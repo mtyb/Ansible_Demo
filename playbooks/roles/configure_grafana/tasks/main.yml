@@ -1,0 +1,10 @@
+  - name: Install Grafana
+    include_tasks: install_grafana.yml
+
+  - name: Create new Grafana Users
+    include_tasks: create_new_users.yml
+    loop: "{{ new_grafana_users }}"
+
+
+
+

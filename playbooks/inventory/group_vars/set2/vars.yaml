@@ -1,0 +1,23 @@
+processes: 
+- "InfraFE.exe"
+- "AMAgent.exe"
+- "Cca.exe"
+- "WatchdogAgent.exe"
+- "WatchdogAgent64.exe"
+- "EMAgent.exe"
+- "EMAgentAssist.exe"
+- "EMNotify.exe"
+
+paths: 
+- "C:\\Documents and Settings\\All Users\\NTUser.pol"
+- "C:\\ProgramData\\NTUser.pol"
+- "C:\\WINDOWS\\Security\\Database\\*.chk"
+- "C:\\WINDOWS\\Security\\Database\\*.edb"
+- "C:\\WINDOWS\\Security\\Database\\*.jrs"
+- "C:\\WINDOWS\\Security\\Database\\*.log"
+- "C:\\WINDOWS\\Security\\Database\\*.sdb"
+- "C:\\WINDOWS\\System32\\GroupPolicy\\"
+- "C:\\Windows\\SoftwareDistribution\\Datastore\\"
+- "C:\\Windows\\Security\\Database\\"
+- "C:\\ProgramData\\"
+- "C:\\Windows\\System32\\GroupPolicy\\"

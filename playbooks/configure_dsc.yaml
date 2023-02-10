@@ -1,0 +1,3 @@
+ - hosts: set1, set2
+   roles: 
+    - configure_dsc

@@ -1,0 +1,53 @@
+  - name: Set Grafana User login
+    set_fact: 
+      grafana_user_login: "{{ (item | from_json)['login'] }}"
+    run_once: true  
+
+  - name: Get Grafana Users
+    uri:
+      url: "{{ grafana_server }}/api/users?perpage=5&page=1"
+      user: "{{ grafana_admin_user }}"
+      password: "{{ grafana_admin_password }}"
+      method: GET
+      body_format: json
+      validate_certs: false
+      force_basic_auth: yes
+    register: grafana_users
+
+  - name: Set Grafana Users list
+    set_fact: 
+      grafana_users_list: "{{ grafana_users | json_query('json[*].login') }}"
+    run_once: yes
+  
+  - name: Create new Grafana Users
+    block:
+    - name: Create {{ grafana_user_login }} User
+      uri:
+        url: "{{ grafana_server }}/api/admin/users"
+        user: "{{ grafana_admin_user }}"
+        password: "{{ grafana_admin_password }}"
+        method: POST
+        body_format: json
+        body: "{{ item }}"
+        validate_certs: false
+        force_basic_auth: yes
+        status_code: [500, 200]
+      no_log: true
+      register: grafana_new_user
+      changed_when: "'User created' in grafana_new_user.json.message"
+
+    - name: Promote {{ grafana_user_login }} User to Admin role
+      uri:
+        url: "{{ grafana_server }}/api/org/users/{{ grafana_new_user | json_query('json.id') }}"
+        user: "{{ grafana_admin_user }}"
+        password: "{{ grafana_admin_password }}"
+        method: PATCH
+        body_format: json
+        body: '{"role": "Admin"}'
+        validate_certs: false
+        force_basic_auth: yes
+      register: user_promote
+      changed_when: "'Organization user updated' in user_promote.json.message" 
+      no_log: true
+      when: grafana_new_user.status == 200
+    when: grafana_user_login not in grafana_users_list

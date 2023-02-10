@@ -1,0 +1,20 @@
+- name: Install GroupPolicyDSC
+  win_psmodule:
+    name: GPRegistryPolicyDsc
+    state: present
+
+- name: Configure SCEP baseline
+  include_tasks: baseline.yaml
+
+- name: Configure SCEP Exlusions (Paths)
+  include_tasks: path_exlusions.yaml
+  loop: "{{ paths }}"
+
+- name: Configure SCEP Exlusions (Processes)
+  include_tasks: processes_exclusions.yaml
+  loop: "{{ processes }}"
+
+- name: Refresh Policy settings
+  win_dsc: 
+    resource_name: RefreshRegistryPolicy
+    IsSingleInstance: 'Yes'

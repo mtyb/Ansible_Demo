@@ -1,0 +1,3 @@
+ - hosts: application1
+   roles: 
+    - configure_windows

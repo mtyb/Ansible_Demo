@@ -1,0 +1,47 @@
+  - name: Check if Telegraf is downloaded
+    win_stat:
+      path: C:\Program Files\telegraf\telegraf.exe
+    register: telegraf_downloaded
+
+  - name: Telegraf v. {{ telegraf_version }} installation
+    block:
+    - name: Create Telegraf directory
+      win_file:
+        path: C:\Program Files
+        state: directory
+
+    - name: Download Telegraf v. {{ telegraf_version }}
+      win_get_url:   
+        url: https://dl.influxdata.com/telegraf/releases/telegraf-{{ telegraf_version }}_windows_amd64.zip
+        dest: C:\Program Files
+
+    - name: Unzip Telegraf v. {{ telegraf_version }}
+      win_unzip:
+        src: C:\Program Files\telegraf-{{ telegraf_version }}_windows_amd64.zip
+        dest: C:\Program Files\
+        delete_archive: yes
+    when: not telegraf_downloaded.stat.exists    
+
+  - name: Copy Telegraf configuration file
+    win_template:
+      src: telegraf_conf.j2
+      dest: C:\Program Files\telegraf\telegraf.conf  
+
+  - name: Check if Telegraf is installed
+    win_shell: | 
+       Get-Service | Where-Object Name -eq "telegraf" 
+    register: telegraf_installed
+
+  - name: Install Telegraf v. {{ telegraf_version }} as a service
+    win_package:
+       path: C:\Program Files\telegraf\telegraf.exe
+       product_id: telegraf
+       arguments: '-config "C:\Program Files\telegraf\telegraf.conf" -service install'
+       state: present
+       expected_return_code: [0]
+    when: "'telegraf' not in telegraf_installed.stdout" 
+
+  - name: Start collecting data with Telegraf v. {{ telegraf_version }}
+    win_service: 
+       name: telegraf
+       state: restarted  
