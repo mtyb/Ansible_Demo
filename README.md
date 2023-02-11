@@ -6,8 +6,8 @@
 - MobaXterm (for SSH connection to Ansible VM) - https://mobaxterm.mobatek.net/download.html
 
 # Repo overview:
-- vagrantfile
-- playbooks directory
+1) vagrantfile
+2) playbooks directory
 
 Vagrantfile creates 4 Virtual Machines:
 - 2 Almalinux VMs - Ansible VM and Grafana VM and 
@@ -55,5 +55,5 @@ ansible -m ping os_linux -i inventory/hosts.ini
 
 To install applications using configure_windows.yaml type:
 ```
-ansible-playbook configure_windows.yaml -i ivnetory/hosts.ini
+ansible-playbook configure_windows.yaml -i inventory/hosts.ini
 ```
