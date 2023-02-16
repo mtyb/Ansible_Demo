@@ -18,16 +18,16 @@ Playbooks directory contains:
 - inventory directory, which contains 
 	- hosts.ini
 	- group_vars directory 
-- role 
-- playbook
+- roles
+- playbooks
 
-hosts.ini - contains IP addresses for all mentioned Virtual Machines. Each IP address is assigned to specific hosts group. 
+``` hosts.ini ``` - contains IP addresses for all mentioned Virtual Machines. Each IP address is assigned to specific hosts group. 
 
-group_vars - contains directories with specific hosts group variables
+``` group_vars ``` - contains directories with specific hosts group variables
 
-role - set a playbooks for deploying specific sets of tasks
+``` role ``` - set a playbooks for deploying specific sets of tasks
 
-playbook - single playbook invoking specific tasks or specific role
+``` playbook ``` - single playbook invoking specific tasks or specific role
 
 # Usage:
 - navigate to repo main directory
