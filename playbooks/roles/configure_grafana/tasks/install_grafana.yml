@@ -25,6 +25,18 @@
             -subj "/C=PL/ST=Warsaw/L=Warsaw/O=Test.Local/OU=IT Department/CN=www.test.local"
     no_log: true
 
+  - name: Set owner on crt
+    file:
+      path: /etc/grafana/example.crt
+      owner: grafana
+      group: grafana
+
+  - name: Set owner on key      
+    file:
+      path: /etc/grafana/example.key
+      owner: grafana
+      group: grafana
+
   - name: Copy Grafana config file
     template: 
       src: grafana_conf.j2
@@ -45,6 +57,14 @@
     systemd: 
       name: grafana-server
       state: restarted
+      
+  - name: Wait for Grafana to start listening on port 3000
+    wait_for: 
+      host: localhost
+      port: 3000
+      delay: 30
+      state: started
+      timeout: 300
 
   - name: Create influxdb datasource
     grafana_datasource:
