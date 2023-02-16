@@ -6,8 +6,8 @@
 - MobaXterm (for SSH connection to Ansible VM) - https://mobaxterm.mobatek.net/download.html
 
 # Repo overview:
-- vagrantfile
-- playbooks directory
+1) vagrantfile
+2) playbooks directory
 
 Vagrantfile creates 4 Virtual Machines:
 - 2 Almalinux VMs - Ansible VM and Grafana VM and 
@@ -18,16 +18,16 @@ Playbooks directory contains:
 - inventory directory, which contains 
 	- hosts.ini
 	- group_vars directory 
-- role 
-- playbook
+- roles
+- playbooks
 
-hosts.ini - contains IP addresses for all mentioned Virtual Machines. Each IP address is assigned to specific hosts group. 
+``` hosts.ini ``` - contains IP addresses for all mentioned Virtual Machines. Each IP address is assigned to specific hosts group. 
 
-group_vars - contains directories with specific hosts group variables
+``` group_vars ``` - contains directories with specific hosts group variables
 
-role - set a playbooks for deploying specific sets of tasks
+``` role ``` - set a playbooks for deploying specific sets of tasks
 
-playbook - single playbook invoking specific tasks or specific role
+``` playbook ``` - single playbook invoking specific tasks or specific role
 
 # Usage:
 - navigate to repo main directory
@@ -55,5 +55,5 @@ ansible -m ping os_linux -i inventory/hosts.ini
 
 To install applications using configure_windows.yaml type:
 ```
-ansible-playbook configure_windows.yaml -i ivnetory/hosts.ini
+ansible-playbook configure_windows.yaml -i inventory/hosts.ini
 ```
