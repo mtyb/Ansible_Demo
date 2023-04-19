@@ -14,4 +14,4 @@
       EOF
       
   - name: Install VSCode
-    shell: sudo dnf check-update && sudo dnf install code -y
+    shell: sudo dnf install code -y
