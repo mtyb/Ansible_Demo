@@ -62,3 +62,8 @@ To install Vim on the Ansible VM using Ansible pull:
 ```
 ansible-pull -U https://github.com/mtyb/Ansible_Demo.git -i hosts vimInstall.yaml
 ```
+
+To limit deployment scope to specific VM from inventory run:
+```
+ansible-playbook -i inventory/hosts.ini installApps.yaml --limit=10.11.12.241
+``` 

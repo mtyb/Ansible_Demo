@@ -1,0 +1,47 @@
+- hosts: application1
+  tasks:
+### check if 7-zip is installed
+  - name: Check if 7Zip {{ zip_version }} is installed
+    win_stat:
+     path: "C:/Program Files/7-Zip/7z.exe"
+    register: zip_installed
+
+### if not installed than install
+  - name: Install 7-Zip {{ zip_version }}
+    block:
+      - name: Create Installs directory
+        win_file:
+          path: "{{ installations_dir }}"
+          state: directory
+      - name: Download installation file 
+        win_get_url:   
+          url: "{{ zip_install_url }}"
+          dest: "{{ installations_dir }}/7z_{{ zip_version }}_-x64.exe"
+      - name: Install Application
+        win_package:
+          path: "{{ installations_dir }}/7z_{{ zip_version }}_-x64.exe"
+          arguments: "/S"
+    when: not zip_installed.stat.exists 
+
+### check if Notepad ++ is installed
+  - name: Check if Notepad ++ {{ notepad_version }} is installed
+    win_stat:
+       path: "C:/Program Files/Notepad++/notepad++.exe"
+    register: notepad_installed
+
+### if not installed than install
+  - name: Install Notepad++ {{ notepad_version }}
+    block:
+      - name: Create Installs directory
+        win_file:
+          path: "{{ installations_dir }}"
+          state: directory
+      - name: Download installation file 
+        win_get_url:   
+          url: "{{ notepad_install_url }}"
+          dest: "{{ installations_dir }}/npp.{{ notepad_version }}.Installer.x64.exe"
+      - name: Install Application
+        win_package:
+          path: "{{ installations_dir }}/npp.{{ notepad_version }}.Installer.x64.exe"
+          arguments: "/S"
+    when: not notepad_installed.stat.exists
