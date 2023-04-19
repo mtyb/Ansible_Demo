@@ -1,0 +1,6 @@
+---
+- hosts: all
+
+  tasks:
+  - name: Test Ansible Pull
+    shell: echo "This playbook was executed using Ansible Pull"
