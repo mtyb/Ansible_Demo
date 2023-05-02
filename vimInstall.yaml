@@ -1,6 +1,0 @@
----
-- hosts: all
-
-  tasks:
-  - name: Install Vim
-    shell: sudo dnf install vim -y

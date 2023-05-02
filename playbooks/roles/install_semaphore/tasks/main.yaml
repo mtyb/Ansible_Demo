@@ -1,0 +1,5 @@
+  - name: Install PostgreSQL
+    include_tasks: install_postgresql.yaml
+
+  - name: Install SemaphoreUI
+    include_tasks: install_semaphore.yaml

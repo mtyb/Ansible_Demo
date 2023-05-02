@@ -1,0 +1,9 @@
+## PostgreSQL ##
+postgresql_user: "postgres"
+postgresql_password: "p0ssTGr3z2023"
+ 
+## SemaphoreUI ##
+semaphore_user_login: "Admin"
+semaphore_user_name: "Admin"
+semaphore_user_email: "admin@example.com"
+semaphore_user_password: "s3m@Ph0re2023!"

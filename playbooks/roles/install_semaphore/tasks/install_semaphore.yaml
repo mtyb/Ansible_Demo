@@ -1,0 +1,58 @@
+  - name: Check if SemaphoreUI is already installed
+    stat:
+      path: /etc/systemd/system/semaphore.service
+    register: semaphore_installed
+
+  - name: Install SemaphoreUI
+    block:     
+    - name: Install wget package
+      shell:
+        dnf install wget -y
+
+    - name: Check if Semaphore instllation is already downloaded
+      stat:
+        path: /tmp/semaphore_2.8.90_linux_amd64.rpm
+      register: semaphore_installation
+
+    - name: Download Semaphore package
+      shell:
+        wget https://github.com/ansible-semaphore/semaphore/releases/download/v2.8.90/semaphore_2.8.90_linux_amd64.rpm -P /tmp/
+      when: semaphore_installation.stat.exists == False
+
+    - name: Install SemaphoreUI
+      shell:
+        dnf install -y /tmp/semaphore_2.8.90_linux_amd64.rpm
+
+    - name: Create SemaphoreUI config directory
+      file:
+        path: /etc/semaphore
+        state: directory
+      
+    - name: Copy SemaphoreUI config file
+      template: 
+        src: config.j2
+        dest: /etc/semaphore/config.json
+
+    - name: Get SemaphoreUI users
+      shell:
+        semaphore user list --config /etc/semaphore/config.json
+      register: semaphore_users
+
+    - name: Create SemaphoreUI user
+      shell:
+        semaphore user add --admin --login "{{ semaphore_user_login }}" --name "{{ semaphore_user_name }}" --email "{{ semaphore_user_email }}" --password "{{ semaphore_user_password }}" --config /etc/semaphore/config.json
+      when: '"{{ semaphore_user_name }}" not in semaphore_users.stdout'
+
+#    - name: Do SemaphoreUI migrations
+#      shell:
+#        semaphore migrate --config /etc/semaphore/config.json
+
+    - name: Create SemaphoreUI service
+      copy:
+        src: files/semaphore.service
+        dest: /etc/systemd/system/
+
+    - name: Enable SemaphoreUI to run at startup
+      shell:
+        systemctl enable --now semaphore.service
+    when: semaphore_installed.stat.exists == False
