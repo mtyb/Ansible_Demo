@@ -58,9 +58,9 @@ To install applications using configure_windows.yaml type:
 ansible-playbook configure_windows.yaml -i inventory/hosts.ini
 ```
 
-To install Vim on the Ansible VM using Ansible pull:
+To install SemaphoreUI on the Ansible VM using Ansible pull:
 ```
-ansible-pull -U https://github.com/mtyb/Ansible_Demo.git  ./playbooks/installSemaphore.yaml
+ansible-pull -U https://github.com/mtyb/Ansible_Demo.git ./playbooks/installSemaphore.yaml
 ```
 
 To limit deployment scope to specific VM from inventory run:
