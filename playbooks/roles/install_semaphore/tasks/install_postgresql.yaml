@@ -1,0 +1,40 @@
+  - name: Check if PostgreSQL is installed
+    shell:
+      sudo systemctl status postgresql-15.service | grep enabled
+    register: postgres_installed
+    ignore_errors: true
+    
+  - name: Install PostgreSQL
+    block:
+    - name: Install PostgreSQL repo
+      shell:
+        dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+    - name: Disable default PostgreSQL module
+      shell:
+        dnf -qy module disable postgresql
+
+    - name: Install PostgreSQL SQL 15
+      shell:
+        dnf install -y postgresql15-server
+
+    - name: Remove default Postgres directory
+      shell:
+        rm -rf /var/lib/pgsql
+
+    - name: Initialize the PostgreSQL Database
+      shell:
+        /usr/pgsql-15/bin/postgresql-15-setup initdb
+
+    - name: Enable PostgreSQL to run at startup
+      shell:
+        systemctl enable postgresql-15
+
+    - name: Start PostgreSQL
+      shell:
+        systemctl start postgresql-15
+    when: postgres_installed.stdout == ''
+
+  - name: Alter postgres user password
+    shell:
+      sudo -u postgres psql -c "ALTER USER {{ postgresql_user }} PASSWORD '{{ postgresql_password }}';"
