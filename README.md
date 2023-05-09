@@ -4,6 +4,7 @@
 
 # Optional software:
 - MobaXterm (for SSH connection to Ansible VM) - https://mobaxterm.mobatek.net/download.html
+- Visual Studio Code (for playbook edition) - https://code.visualstudio.com/
 
 # Repo overview:
 1) vagrantfile
