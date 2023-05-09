@@ -1,0 +1,8 @@
+- hosts: application1
+  tasks:
+  - name: Install adobereader
+    win_chocolatey:
+      name: adobereader
+      version: '2023.001.20093'
+      state: present
+      force: yes
